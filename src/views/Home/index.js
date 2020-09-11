@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 
 import * as S from './styles';
 
@@ -7,31 +7,36 @@ import Button from '../../Components/Button'
 
 import Frases from '../datacontent'
 
-const INITIAL_STATE = {
-    frase: '',
-    author: ''
-}
-
 function Home() {
 
-    const [frase, setFrase] = useState(INITIAL_STATE)
 
-    const generate = () => {
-        var min = 0;
-        var max = Frases.length;
-        const random = min + Math.random() * (max - min);
-        // console.log(Frases[Math.ceil(random)])
-        setFrase(Frases[Math.trunc(random)]);
-    }
+    const [frase, setFrase] = useState('')
+    const [author, setAuthor] = useState('')
 
     useEffect(()=> {
         generate()
     },[])
 
+    const generate = () => {
+        var min = 0;
+        var max = Frases.length;
+        
+        const randomCitacao = Math.trunc(min + Math.random() * (max - min));
+        const citacao = Frases[randomCitacao];
+        setAuthor(citacao.author);
+
+        max = citacao.frases.length;
+        const randomFrase = Math.trunc(min + Math.random() * (max - min));
+        const frase = citacao.frases[randomFrase]
+        setFrase(frase)
+    }
+
+   
+
 
   return (
       <S.HomeWrapper>
-          <Card frase={frase.frase} author={frase.author}>
+          <Card frase={frase} author={author}>
             <Button onClick={generate}>Mais um, mais um!</Button>
           </Card>
       </S.HomeWrapper>
